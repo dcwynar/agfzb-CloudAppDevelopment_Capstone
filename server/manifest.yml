@@ -1,11 +1,11 @@
   applications:
-  - name: dealerreiew
+  - name: dealer-5c343ea544daedc7
     routes:
-      - route: host.domain
+      - route: dealer-5c343ea544daedc7.eu-gb.mybluemix.net
     memory: 128M
     buildpack: python_buildpack
-  - name: dealerreiew-nginx
+  - name: dealer-nginx-5c343ea544daedc7
     routes:
-      - route: host.domain/static
+      - route: dealer-5c343ea544daedc7.eu-gb.mybluemix.net/static
     memory: 128M
     buildpack: staticfile_buildpack
