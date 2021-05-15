@@ -141,3 +141,6 @@ server/djangoapp/migrations/
 *.pyc
 server/djangoapp/migrations/
 
+server/Pipfile
+.gitignore
+server/Pipfile.lock
