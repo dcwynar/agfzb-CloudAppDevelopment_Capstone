@@ -22,8 +22,9 @@ class CarModel(models.Model):
         ('suv', 'SUV'), 
         ('sedan', 'Sedan'),
         ('wagon', 'WAGON'),
-        ('coupe', 'COUPE'),
-        ('hatchback', 'HATCHBACK')
+        ('coupe', 'Coupe'),
+        ('hatchback', 'Hatchback'),
+        ('compact', 'Compact')
     ))
     year = models.DateField()
     def __str__(self):
