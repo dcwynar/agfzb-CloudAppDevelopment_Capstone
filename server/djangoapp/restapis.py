@@ -123,15 +123,15 @@ def get_dealer_by_state(state, url = URL_API):
 def get_dealer_reviews_from_cf(dealerId, url = URL_API):
     def json_to_dealer_review(data):
         return DealerReview(
-            id=data.get('id', None),
+            id=data.get('id', ''),
             dealership=data['dealership'],
             review=data['review'],
-            name=data.get('name', None),
-            purchase=data.get('purchase', None),
-            purchase_date=data.get('purchase_date', None),
-            car_make=data.get('car_make', None),
-            car_model=data.get('car_model', None),
-            car_year=data.get('car_year', None),
+            name=data.get('name', ''),
+            purchase=data.get('purchase', ''),
+            purchase_date=data.get('purchase_date', ''),
+            car_make=data.get('car_make', ''),
+            car_model=data.get('car_model', ''),
+            car_year=data.get('car_year', ''),
             sentiment=analyze_review_sentiments(text=data['review'])
             )
     url = url + '/review'

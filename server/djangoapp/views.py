@@ -11,7 +11,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.csrf import csrf_exempt
 
 from .models import CarDealer, CarMake, CarModel
-from .restapis import (URL_API, get_dealer_reviews_from_cf,
+from .restapis import (URL_API, get_dealer_by_id, get_dealer_reviews_from_cf,
                        get_dealers_from_cf, post_request)
 
 # Get an instance of a logger
@@ -83,25 +83,39 @@ def get_dealerships(request):
 
 def get_dealer_details(request, dealer_id):
     if request.method == "GET":
-        reviews = get_dealer_reviews_from_cf(dealer_id)
-        return HttpResponse(' '.join(map(str, reviews)))
+        context = {}
+        context['reviews'] = get_dealer_reviews_from_cf(dealer_id)
+        context['dealer'] = get_dealer_by_id(dealer_id)
+        return render(request, 'djangoapp/dealer_details.html', context)
 
 @csrf_exempt
 def add_review(request, dealer_id):
     if request.method == "POST":
         if request.user.is_authenticated:
             review = {}
+            form = request.POST
             review["time"] = datetime.utcnow().isoformat()
             review["dealership"] = dealer_id
-            review["review"] = "This is a great car dealer"
+            review["review"] = form.get('content', '')
+            if form.get('purchasecheck', 'off') == 'on':
+                review["purchase"] = True
+            else:
+                review["purchase"] = False
+            review["purchase_date"] = form.get("purchasedate", "01/01/1970")
+            car = CarModel.objects.get(id = form.get('car', '1')) #Fallback car
+            review["car_make"] = car.make.name
+            review["car_model"] = car.name
+            review["car_year"] = car.year.strftime("%Y")
+            review["name"] = request.user.username
             payload = {'review': review}
             add_response = post_request(URL_API+'/review', json_payload=payload)
-            return JsonResponse(add_response)
+            return redirect("djangoapp:dealer_details", dealer_id=dealer_id)
         else:
             response = HttpResponse('You need to authenticate!')
             response.status_code = 401
             return response
-    else:
-        response = HttpResponse('This is a POST endpoint!')
-        response.status_code = 400
-        return response
+    elif request.method == "GET":
+        context = {}
+        context['cars'] = list(CarModel.objects.filter(dealer_id = dealer_id))
+        context['dealer'] = get_dealer_by_id(dealer_id)
+        return render(request, 'djangoapp/add_review.html', context)

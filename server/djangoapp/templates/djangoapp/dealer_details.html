@@ -1,5 +1,33 @@
 {% include "base/header.html" %}
 
-    <!-- Add reviews as cards -->
+<div class="container">
+    <h1>Reviews for {{dealer.full_name}}:</h1>
+    {% if user.is_authenticated %}
+    <a href="{% url 'djangoapp:add_review' dealer.id %}" class="btn btn-primary m-3">
+        Add review!
+    </a>
+    {% endif %}
+    <div class="card-columns">
+        {% for review in reviews %}
+        {% if review.sentiment == 'positive' %}
+        <div class="card border-success rounded shadow p-md-3">
+        {% elif review.sentiment == 'negative' %}
+        <div class="card border-danger rounded shadow p-md-3">
+        {% else %}
+        <div class="card rounded shadow p-md-3">
+        {% endif %}
+            <img src="{{MEDIA_URL}}/emoji/{{review.sentiment}}.png" class="p-md-3 w-25">
+            <div class="card-body p-md-3 bg-light rounded">
+                <h3 class="card-title">{{review.car_make}} {{review.car_model}}</h3>
+                <blockquote class="blockquote mb-0">
+                    <p class="card-text">{{review.review}}</p>
+                    <footer class="blockquote-footer">{{review.name}}</footer>
+                </blockquote>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
 
 {% include "base/footer.html" %}
