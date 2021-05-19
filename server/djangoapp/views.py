@@ -77,9 +77,9 @@ def registration_request(request):
 
 def get_dealerships(request):
     if request.method == "GET":
-        dealerships = get_dealers_from_cf()
-        dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
-        return HttpResponse(dealer_names)
+        context = {}
+        context['dealership_list'] = get_dealers_from_cf()
+        return render(request, 'djangoapp/index.html', context)
 
 def get_dealer_details(request, dealer_id):
     if request.method == "GET":

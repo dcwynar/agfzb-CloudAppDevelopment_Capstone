@@ -123,7 +123,7 @@ def get_dealer_by_state(state, url = URL_API):
 def get_dealer_reviews_from_cf(dealerId, url = URL_API):
     def json_to_dealer_review(data):
         return DealerReview(
-            id=data['id'],
+            id=data.get('id', None),
             dealership=data['dealership'],
             review=data['review'],
             name=data.get('name', None),
@@ -136,7 +136,7 @@ def get_dealer_reviews_from_cf(dealerId, url = URL_API):
             )
     url = url + '/review'
     json_result = get_request(url, dealerId=dealerId)
-    if json_result:
+    if len(json_result) > 0:
         reviews = list(map(json_to_dealer_review, json_result))
         return reviews
     return []
